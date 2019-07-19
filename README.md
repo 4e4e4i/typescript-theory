@@ -1,3 +1,5 @@
+<link href="style.css" rel="stylesheet"></link>
+
 # typescript-theory
 
 ## Введение в TypeScript
@@ -77,7 +79,82 @@ const z = 6;
 z = 8; // Здесь ошибка - нельзя изменить значение константы z
 ```
 
-<div style="display: flex;">
-    <div>var</div>
-    <div>let/const</div>
-</div>
+<table>
+    <thead>
+          <tr>
+              <td>var</td>
+              <td>let/const</td>
+          </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                Доступна в любой части функции, в которой она определена
+                <pre>
+function print(){
+    if(1) {
+        var x = 94;
+    }
+    console.log(x); // норм
+}
+                </pre>
+            </td>
+            <td>
+                Доступна в рамках блока, в котором она определена
+                <pre>
+function print(){
+ if(1) {
+     let x = 94;
+ }
+ console.log(x); // ! Ошибка
+}
+                </pre>
+            </td>
+         </tr>
+         <tr>
+            <td>
+                Можно использовать в функции перед определением.
+                <pre>
+function print(){
+    console.log(x); // undefined, но норм
+    var x = 76;
+}
+                </pre>
+            </td>
+            <td>
+                Можно использовать только после определения.
+                <pre>
+function print(){
+    console.log(x); // ! Ошибка
+    let x = 76;
+}
+                </pre>
+            </td>
+         </tr>
+         <tr>
+            <td>
+                В одной и той же функции можно несколько раз определить переменную с одним и тем же именем.
+                <pre>
+function print(){
+    var x = 72;
+    console.log(x); // 72
+    var x = 24;     // норм
+    console.log(x); // 24
+}
+                </pre>
+            </td>
+            <td>
+                В одной и той же функции можно только один раз определить переменную с одним и тем же именем.
+                <pre>
+function print(){
+    let x = 72;
+    console.log(x); // 72
+    let x = 24;     // ! Ошибка
+    console.log(x);
+}
+                </pre>
+            </td>
+         </tr>
+    </tbody>
+    
+</table>

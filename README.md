@@ -1416,3 +1416,76 @@ someFigure.getArea();
 
 Абстрактный метод не определяет никакой реализации. Если класс содержит абстрактные мтеоды, то такой класс должен быть абстрактным.
 Кроме того, при наследовании производные классы обязаны реализовать все абстрактные методы.
+
+### Интерфейсы
+
+#### Интерфейсы объектов
+
+Интерфейс определяет свойства и методы, которые объект должен реализовать. Другими словами, интерфейс - это определение
+кастомного типа данных, но без реализации. В данном случае интерфейсы в TS похожи на интерфейсы в языках Java и C#.
+Интерфейсы определяются с помощью ключевого слова interface. Для начала определим простенький интерфейс:
+
+```typescript
+interface IUser {
+  id: number;
+  name: string;
+}
+```
+
+Интерфейс в фигурных скобках определяет два свойства: id, которое имеет тип number, и name, которая представляет строку.
+Теперь используем его в программе:
+
+```typescript
+let employee: IUser = {
+    
+    id: 1,
+    name: "Tom"
+}
+console.log("id: " + employee.id);
+console.log("name: " + employee.name);
+```
+
+По сути employee - обычный объект за тем исключением, что он имеет тип IUser. Если правильнее говорить, то employee
+реализует интерфейс IUser. Причем эта реализация накладывает на employee некоторые ограничения. Так, employee должен
+реализовать все свойства и методы интерфейса IUser, поэтому при определении employee данный объект обязательно должен включать в себя свойства
+id и name. 
+
+Параметры методов и функций также могут представлять интерфейсы:
+
+```typescript
+interface IUser {
+    id: number;
+    name: string;
+}
+
+let employee: IUser = {
+    id: 1,
+    name: "Alice"
+}
+
+function getEmployeeInfo(user: IUser): void {
+    console.log("id: " + user.id);
+    console.log("name: " + user.name);
+}
+
+getEmployeeInfo(employee)
+```
+
+В этом случае аргумент, который передается в функцию, должен представлять объек или класс, который реализует соответствующий
+интерфейс.
+
+И также можно возвращать объекты интерфейса:
+
+```typescript
+interface IUser {
+    id: number;
+    name: string;
+}
+function buildUser(userId: number, userName: string): IUser {
+    return { id: userId, name: userName };
+}
+
+let newUser = buildUser(2, "Bill");
+console.log("id: " + newUser.id);
+console.log("name: " + newUser.name);
+```

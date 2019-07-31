@@ -1177,3 +1177,66 @@ class User {
 ```
 
 Также мы можем вместе с модификтором readonly задать модификтор доступа.
+
+#### Наследование. Абстрактные классы
+
+Одним из ключевых моментов объектно-ориентированной парадигмы является наследование. В TypeScript наследование
+реализуется с помощью ключевого слова extends (как в Java):
+
+```typescript
+class User {
+    
+    name: string;
+    constructor(userName: string) {
+        this.name = userName
+    }
+    getInfo(): void {
+        console.log("Имя: " + this.name);
+    }
+    
+}
+
+class Employee extends User {
+    company: string;
+    work(): void {
+        console.log(this.name + " работает в компании " + this.company)
+    }
+}
+```
+
+Класс Employee, который представляет работника, является подклассом или наследуется от класса User. А класс User называется
+родительским или базовым классом. При наследовании класс Employee перенимает весь функционал класса User - все его свойства и функции
+и может их использовать. И также можно определить в подклассе новые свойства и методы, которых нет в классе User.
+
+```typescript
+let bill: Employee = new Employee("Bill");
+bill.getInfo();
+bill.company = "Microsoft"
+bill.work();
+``` 
+
+Также мы можем расширить функциональность класса следующим образом:
+
+```typescript
+class User {
+    name: string;
+    constructor(userName: string) {
+     this.name = userName;
+    }
+    getInfo(): void {
+        console.log("Имя " + this.name);
+    }
+    
+}
+
+let Employee = class  {
+    company: string;
+    work(): void {
+        console.log(this.name, " работает в компании ", this.company)
+    }
+}
+
+let sam = new Employee("Sam");
+sam.company = "Google";
+sam.work();
+```

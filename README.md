@@ -865,3 +865,90 @@ console.log(mathOp(10, 20, (x,y)=>x+y)); // 30
 console.log(mathOp(10, 20, (x,y)=>x*y)); // 200
 ```
 
+## Объектно-ориентированное программирование
+
+### Классы
+
+TypeScript реализует объектно-ориентированный подход, в нем есть полноценная поддержка классов. Класс представляет
+шаблон для создания объектов и инкапсулирует функциональность, которую должен иметь объект. Класс определяет состояние и 
+поведение, которыми обладает объект.
+
+Для определения нового класса применяется ключевое слово class:
+
+```typescript
+class User {
+    
+    id: number;
+    name: string;
+    getInfo(): string {
+        return "id:" + this.id + " name" + this.name;
+    }
+}
+```
+
+Класс называется User, он представляет пользователя и имеет два свойства id и name, которые хранят состояние объекта. И также класс 
+определяет одну функцию getInfo(), которая представляет поведение объекта.
+
+После определения класса мы можем создавать его объекты:
+
+```typescript
+let tom: User = new User();
+tom.id = 1;
+tom.name = "Tom";
+console.log(tom.getInfo());
+
+let alice: User = new User();
+alice.id = 2;
+alice.name = "Alice";
+console.log(alice.getInfo());
+```
+
+Кроме обычных функций классы имеют специальные функции - конструкторы, которые определяются с помощью ключевого слова
+constructor. Конструкторы выполняют начальную инициализацию объекта. Например, добавим в класс User конструктор:
+
+```typescript
+class User {
+    id: number;
+    name: string;
+    constructor(userId: number, userName: string) {
+        this.id = userId;
+        this.name = userName;
+    }
+    getInfo(): string {
+        return "id:" + this.id + " name:" + this.name;
+    }
+}
+
+let tom: User = new User(1, "Tom");
+console.log(tom.getInfo());
+tomd.id = 4;
+
+let alice: User = new User(2, "Alice");
+console.log(alice.getInfo());
+```
+
+### Статические свойства и функции
+
+Кроме обычных свойств и функций класс может иметь статические. Для использования статических функций и свойства не надо
+создавать объект класса.
+
+Статические фунеции и свойства определяются с помощью ключевого слова static:
+
+```typescript
+class Operation {
+    
+    static PI: number = 3.14;
+    
+    static getSquare(raidus: number): number {
+        
+        return Operation.PI * radius * raidus;
+    }
+}
+
+let result = Operation.getSquare(30);
+console.log("Площадь круга с радиусом 30 равно " + result);
+let result2 = Operation.PI * 30 * 30;
+console.log(result2); // 2826
+```
+
+

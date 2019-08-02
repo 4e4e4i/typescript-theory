@@ -2152,6 +2152,87 @@ tsc --module systen main.ts // для SystemJS
 
 * **Browserify**: использует синтаксис CommonJS
 
+* **SystemJs**: универсальный загрузчик, может применяться для модулей любого типа
+
+#### Определение модуля и экспорт
+
+Пусть у нас будет в проекте файл devices.ts:
+
+```typescript
+export interface Device {
+    name: string;
+}
+
+export class Phone implements Device {
+    name: string;
+    constructor(n:string) {
+     this.name = n;
+    }
+}
+
+function Call(phone: Phone): void {
+  console.log("Make a call by", phone.name);
+}
+
+export {Device, Phone, Call as Devices};
+```
+
+При экспорте можно определить псевдоним для типа с помощью ключевого слова as. Это имя затем может применяться при импорте
+класса.
+
+### Импорт
+
+Чтобы задействовать модуль в приложении, его надо импортировать с помощью оператора import. Например, импортируем класс
+Phone и функцию Call из выше определенного модуля devices.ts: 
+
+```typescript
+import { Phone, Call } from "./devices";
+let iphone: Phone = new Phone("iPhone X");
+Call(iphone);
+```
+
+После слова import определяется набор импортируемых типов - классов, интерфейсов, функций, объектов. А после слова from
+указывается путь к модулю. В данном случае модуль располагается в файле devices.ts, который находится в той же папке,
+поэтому в начале пути ставится точка и далее указывается название файла без расширения. Если бы модуль располагался бы
+в папке lib, находящейся в текущем каталоге, то название папки также бы включалось в путь к модулю: "./lib/devices".
+
+Опять же с помощью оператора as можно указать псевдоним типа:
+
+```typescript
+import { Phone, Call as makeCall } from "./devices";
+let iphone: Phone = new Phone("iPhone X");
+makeCall(iphone);
+```
+
+Можно импортировать сразу весь модуль:
+
+```typescript
+import * as dev from './devices';
+let iphone: devPhone = new dev.Phone("iPhone X");
+dev.Call(iphone);
+```
+
+В данном случае модуль импортируется через псевдоним "dev". И, используя этот псевдоним, мы можем обращаться к расположенным
+в этом модуле типам.
+
+#### Экспорт по умолчанию
+
+Параметры экспорта по умолчанию позволяют определить тип, который будет импортироваться из модуля по умолчанию. К примеру,
+добавим новый модуль smartwatch.ts:
+
+```typescript
+export default class SmartWatch {
+    model: string;
+}
+```
+
+Ключевое слово default позволяет установить класс SmartWatch в качестве типа по умолчанию. И затем мы можем импортировать
+его следующим образом:
+
+```typescript
+import SmartWatch from "./smartwatch"
+let iwatch: SmartWatch = new SmartWatch();
+```
 
 
 

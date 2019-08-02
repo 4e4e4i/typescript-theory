@@ -1956,3 +1956,202 @@ applyMixins(Horse, [Animal, Transport]);
 
 * Если родительские классы определяют метод с одним и тем же именем, то миксин наследует только тот метод, который
 копируется в него последним в функции applyMixins.
+
+## Модули и пространства имен
+
+### Пространства имен
+
+Для организации больших программ предназначены пространства имен. ПРостранства имен содержат группу классов, интерфейсов,
+функций, других пространств имен, которые могут использоваться в некотором общем контексте.
+
+Для определения пространтс имен используется ключевое слово namespace: 
+
+```typescript
+namespace Personnel {
+    export class Employee {
+        constructor(public name: string) {
+        }
+    }
+}
+```
+
+В данном случае пространство имен называется Personnel, и оно содержит класс Employee. Чтобы типы и объекты, определенные
+в пространстве имен, были видны извне, они определяются с ключевым словом export. В этом случае во вне мы сможем использовать
+класс Employee:
+
+```typescript
+namespace Personnel {
+    export class Employee {
+        constructor(public name: string) {
+        }
+    }
+}
+let alice = new Personnel.Employee("Alice")
+console.log(alice.name);  // Alice
+```
+
+При этом пространства имен могут содержать и интерфейсы, и объекты, и функции:
+
+```typescript
+namespace Personnel {
+    
+    export interface IUser {
+        displayInfo();
+    }
+    
+    export class Employee {
+        constructor(public name: string) {
+        }
+    }
+    
+    export function work(emp: Employee) : void {
+        console.log(emp.name, "is working");
+    }
+    
+    export let defaultUser = { name: "Kate"};
+}
+
+let tom = new Personnel.Employee("Tom");
+Personnel.work(tom);   // Tom is working
+```
+
+#### Пространство имен в отдельном файле
+
+Нередко пространства имен определяются в отдельных файлах. Например, определим файл personnel.ts со следующим кодом:
+
+```typescript
+namespace Personnel {
+    export class Employee {
+        constructor(public name: string) {
+        }
+    }
+    
+    export class Manager {
+        constructor(public name: string) {
+        }
+    }
+}
+```
+
+И в той же папке определим главный файл приложения app.ts:
+
+```typescript
+/// <reference path="personnel.ts" />
+
+let tom = new Personnel.Employee("Tom");
+console.log(tom.name);
+
+let sam = new Personnel.Manager("Sam");
+console.log(sam.name);
+```
+
+С помощью директивы /// <reference path="personnel.ts" /> подключается файл personnel.ts.
+
+Далее нам надо объединить оба файла в один файл, который затем можно подключать на веб-страницу. Для этого при компиляции
+указывается опция:
+
+```typescript
+--outFile target.js sourse1.ts source2.ts source3.ts ...
+```
+
+Опции outFile в качестве первого параметра передается название файла, который будет генерироваться. А последующие
+параметры - файлы с кодом TypeScript, которые будут компилироваться.
+
+То есть в данном случае нам надо выполнить в консоли команду
+
+tsc --outFile app.js app.ts personnel.ts
+
+В итоге будет создан один файл app.js.
+
+#### Вложенные пространства имен
+
+Пространства имен могут быть вложенными:
+
+```typescript
+namespace Data {
+    export namespace Personnel {
+        export class Employee {
+            constructor(public name: string) {}
+        }
+    }
+    
+    export namespace Clients {
+        export class VipClient {
+            constructor(public name: string) {
+            }
+        }
+    }
+}
+
+let tom = new Data.Personnel.Employee("Tom");
+console.log(tom.name);
+
+let sam = new Data.Clients.VipClient("Sam");
+console.log(sam.name);
+```
+
+Причем вложенные пространства имен определяются со словом export. Соответственно при обращении к типам надо использовать
+все пространства имен.
+
+#### Псевдонимы
+
+Возможно, нам приходится создавать множество объектов Data.Personnel.Employee, но каждый раз набирать полное имя класса
+с учетом пространств имен, вероятно, не всем понравиться, особенно когда модули имеют глубокую вложенность по принципу
+матрешки. Чтобы сократить объем кода, мы можем использовать псеводнимы, задаваемые с помощью ключевого слова import.
+Например:
+
+```typescript
+namespace Data {
+    export namespace Personnel {
+        export class Employee {
+            constructor(public name: string) {
+            }
+        }
+    }
+}
+
+import employee = Data.Personnel.Employee;
+let tom = new employee("Tom");
+console.log(tom.name);
+``` 
+
+После объявления псевдонима employee будет рассматриваться как краткое имя для Data.Personnel.Employee.
+
+### Модули
+
+TypeScript поддерживает работу с модулями. Модули являются концепцией, привнесенной стандартом ES2015, однако в современных
+браузерах нативная поддержка модулей еще не реализована.
+
+Модули в некотором смысле похожи на пространства имен: они могут заключать различные классы, интерфейсы, функции, объекты.
+Модули выделяются в отдельные файлы, что позволяет сделать код приложения более ясным и чистым, и в то же время
+позволяет использовать модули в других приложениях. При этом модули подключатся в приложение не посредством тега <script>
+а спомощью загрузчика модулей.
+
+Все модули имеют определенный формат и относятся к определенной системе. Всего мы можем использовать 5 различных систем
+модулей:
+
+* AMD (Asynchronys Module Defenition)
+* CommonJs
+* UMD (Universal Module Definition)
+* System
+* ES 2015
+
+При компиляции из командной строки или терминала для установки модуля необходимо передать соответствующее значение
+параметру --module:
+
+```
+tsc --module commonjs main.ts // для CommonJS
+tsc --module amd main.ts // для AMD
+tsc --module umd main.ts // для UMD
+tsc --module systen main.ts // для SystemJS
+```
+
+А для загрузки модулей можно выбрать один из следующих загрузчиков:
+
+* **RequireJS**: RequireJS использует синтаксис, известный как асинхронное определение модуля или asynchronous module definition(AMD)
+
+* **Browserify**: использует синтаксис CommonJS
+
+
+
+
